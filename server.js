@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
-const { resolve } = require("path");
+const cors = require("cors");
+
+app.use(cors());
+
 // Replace if using a different env file or config
 const env = require("dotenv").config({ path: "./.env" });
 
@@ -10,36 +13,68 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 
 app.use(express.static(process.env.STATIC_DIR));
 
-app.get("/", (req, res) => {
-  const path = resolve(process.env.STATIC_DIR + "/index.html");
-  res.sendFile(path);
-});
-
-app.get("/config", (req, res) => {
-  res.send({
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-  });
-});
-
-app.post("/create-payment-intent", async (req, res) => {
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      currency: "EUR",
-      amount: 1999,
-      automatic_payment_methods: { enabled: true },
-    });
-
-    // Send publishable key and PaymentIntent details to client
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (e) {
-    return res.status(400).send({
-      error: {
-        message: e.message,
+app.post("/create-personal-checkout", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "GasLockR Personal Plan",
+            description: "GasLockR Personal Plan",
+            images: [
+              "https://stripe-camo.global.ssl.fastly.net/ae797d80f64f34c63a86ed5d85ee869bc8f72a9e9bdd684cae40d76e2b3ae374/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a64463878546c4e6864466c435957464255304e7a64574e7966475a6662476c325a56396165577069655670305a6c64334e457456546c5a3363455a465a6c413353453430304e76667a68593652",
+            ],
+          },
+          unit_amount: 1000,
+        },
+        quantity: 1,
+        adjustable_quantity: {
+          enabled: true,
+          minimum: 0,
+          maximum: 1,
+        },
       },
-    });
-  }
+    ],
+    mode: "payment",
+    success_url: "http://localhost:3000/GasSubscribe",
+    cancel_url: "http://localhost:3000/GasSubscribe",
+  });
+
+  res.json({ id: session.id });
+});
+
+app.post("/create-professional-checkout", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: "GasLockR Professional Plan",
+            description: "GasLockR Professional Plan",
+            images: [
+              "https://stripe-camo.global.ssl.fastly.net/ae797d80f64f34c63a86ed5d85ee869bc8f72a9e9bdd684cae40d76e2b3ae374/68747470733a2f2f66696c65732e7374726970652e636f6d2f66696c65732f4d44423859574e6a64463878546c4e6864466c435957464255304e7a64574e7966475a6662476c325a56396165577069655670305a6c64334e457456546c5a3363455a465a6c413353453430304e76667a68593652",
+            ],
+          },
+          unit_amount: 2500,
+        },
+        quantity: 1,
+        adjustable_quantity: {
+          enabled: true,
+          minimum: 1,
+          maximum: 999,
+        },
+      },
+    ],
+    mode: "payment",
+    success_url: "http://localhost:3000/GasSubscribe",
+    cancel_url: "http://localhost:3000/GasSubscribe",
+  });
+
+  res.json({ id: session.id });
 });
 
 app.listen(5252, () =>
