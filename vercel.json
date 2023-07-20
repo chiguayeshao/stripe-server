@@ -1,0 +1,39 @@
+{
+    "headers": [
+      {
+        "source": "/create-personal-checkout",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://gaslockr-website.vercel.app"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, POST, PUT, DELETE, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Content-Type, Authorization"
+          }
+        ]
+      },
+      {
+        "source": "/create-professional-checkout",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://gaslockr-website.vercel.app"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, POST, PUT, DELETE, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Content-Type, Authorization"
+          }
+        ]
+      }
+    ]
+  }
+  
