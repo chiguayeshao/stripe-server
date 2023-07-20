@@ -10,6 +10,26 @@ app.use(
 
 app.use(express.json());
 
+app.options("/create-personal-checkout", (req, res) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://gaslockr-website.vercel.app"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
+});
+
+app.options("/create-professional-checkout", (req, res) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://gaslockr-website.vercel.app"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
+});
+
 const env = require("dotenv").config({ path: "./.env" });
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
