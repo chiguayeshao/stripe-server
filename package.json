@@ -2,9 +2,8 @@
   "name": "stripe-server",
   "version": "1.0.0",
   "description": "GasLockR Stripe Server",
-  "main": "server.js",
+  "main": "api/index.js",
   "scripts": {
-    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"**/*.{js,jsx}\""
   },
